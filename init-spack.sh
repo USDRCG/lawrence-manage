@@ -32,12 +32,13 @@ COMPILERS="$SPACK_ROOT/etc/spack/defaults/compilers.yaml"
 tac $SPACK_ROOT/etc/spack/defaults/compilers.yaml | sed -e '0,/extra_rpaths: \[\]/s//     - \/opt\/intel\/compilers_and_libraries_2017.4.196\/linux\/compiler\/lib\/intel64 \
     extra_rpaths: \ /'|tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
 
-tac $COMPILERS | sed -e '0,/flags: {}/s//flags: \
+tac $COMPILERS | sed -e '0,/flags: {}/s//\
       cflags: -O3 \
       cxxflags: -O3 \
       cppflags: -O3 \
       fflags: -O3 \
-      fcflags: -O3 /' | tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
+      fcflags: -O3 \
+    flags:/' | tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
 
 echo
 echo "Configuring Modules"
