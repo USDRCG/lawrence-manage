@@ -30,7 +30,7 @@ source \$SPACK_ROOT/share/spack/setup-env.sh
 EOF
 
 cat << EOF > /etc/profile.d/spack.csh
-setenv SYS_TYPE linux-centos6-x86_64
+setenv SYS_TYPE linux-centos7-x86_64
 setenv SPACK_ROOT $SPACK_ROOT
 source \$SPACK_ROOT/spack/share/spack/setup-env.csh
 EOF
