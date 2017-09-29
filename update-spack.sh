@@ -20,7 +20,7 @@ cd -
 pkg_after=$(spack list | wc -l)
 
 echo
-echo "Applying spack configuration"
+echo "Re-applying spack configuration"
 ./config-spack.sh
 
 echo
