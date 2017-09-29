@@ -16,8 +16,9 @@ export FORCE_UNSAFE_CONFIGURE=1
 [ $? -eq 0 ] && $INSTALL boost
 [ $? -eq 0 ] && $INSTALL jdk
 [ $? -eq 0 ] && $INSTALL r
-[ $? -eq 0 ] && $INSTALL python@2
-# hack:
+# python 2
+[ $? -eq 0 ] && $INSTALL python
+# hack for python3
 [ $? -eq 0 ] && $INSTALL python@3.6.2
 [ $? -eq 0 ] && $INSTALL perl
 [ $? -eq 0 ] && $INSTALL singularity
