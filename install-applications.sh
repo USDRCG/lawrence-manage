@@ -7,6 +7,8 @@ INSTALL="spack install"
 
 echo "Installing applications"
 
+# for tar
+export FORCE_UNSAFE_CONFIGURE=1
 
 # ipv6 weirdness...
 #[ $? -eq 0 ] && $INSTALL parallel
@@ -15,7 +17,8 @@ echo "Installing applications"
 [ $? -eq 0 ] && $INSTALL jdk
 [ $? -eq 0 ] && $INSTALL r
 [ $? -eq 0 ] && $INSTALL python@2
-[ $? -eq 0 ] && $INSTALL python@3
+# hack:
+[ $? -eq 0 ] && $INSTALL python@3.6.2
 [ $? -eq 0 ] && $INSTALL perl
 [ $? -eq 0 ] && $INSTALL singularity
 [ $? -eq 0 ] && $INSTALL ffmpeg
