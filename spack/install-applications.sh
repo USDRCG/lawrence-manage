@@ -10,30 +10,70 @@ echo "Installing applications"
 # for tar
 export FORCE_UNSAFE_CONFIGURE=1
 
-# ipv6 weirdness...
-#[ $? -eq 0 ] && $INSTALL parallel
 
-[ $? -eq 0 ] && $INSTALL boost
-[ $? -eq 0 ] && $INSTALL jdk
-[ $? -eq 0 ] && $INSTALL r
+# Spack Install wrapper
+spinstall () {
+    echo
+    echo "Installing $1"
+    $INSTALL $1
+    [ $? -ne 0 ] && exit -1
+}
+
+# ipv6 weirdness...
+#spinstall parallel
+
+spinstall boost
+spinstall jdk
+spinstall r
 # python 2
-[ $? -eq 0 ] && $INSTALL python
+spinstall python
 # hack for python3
-[ $? -eq 0 ] && $INSTALL python@3.6.2
-[ $? -eq 0 ] && $INSTALL perl
-[ $? -eq 0 ] && $INSTALL singularity
-[ $? -eq 0 ] && $INSTALL ffmpeg
-[ $? -eq 0 ] && $INSTALL fftw
-[ $? -eq 0 ] && $INSTALL paraview
+spinstall python@3.6.2
+spinstall perl
+spinstall singularity
+spinstall ffmpeg
+spinstall fftw
+spinstall paraview
 
 # Chemistry
-[ $? -eq 0 ] && $INSTALL jmol
-[ $? -eq 0 ] && $INSTALL openbabel
-[ $? -eq 0 ] && $INSTALL gromacs
-[ $? -eq 0 ] && $INSTALL lammps
-[ $? -eq 0 ] && $INSTALL namd
-[ $? -eq 0 ] && $INSTALL nwchem
+spinstall jmol
+spinstall openbabel
+spinstall gromacs
+spinstall lammps
+spinstall nwchem
+# Commercial:
+spinstall namd
 
 # Physics
-[ $? -eq 0 ] && $INSTALL root
-[ $? -eq 0 ] && $INSTALL geant4
+# Currently broken
+# spinstall geant4
+# spinstall root
+
+# Bioinformatics
+spinstall velvet
+spinstall subread
+#spinstall freebayes
+spinstall varscan
+spinstall vcftools
+spinstall bamutil
+spinstall bamtools
+#spinstall mrbayes
+spinstall mothur
+spinstall phylip
+spinstall picard
+#spinstall tcoffee
+spinstall tophat
+spinstall bcftools
+#spinstall bcl2fastq2
+#spinstall bowtie
+spinstall bowtie2
+spinstall bwa
+spinstall clustalo
+spinstall clustalw
+spinstall cufflinks
+#spinstall emboss
+#spinstall fastx-toolkit
+spinstall fastqc
+spinstall hmmer
+# Commercial
+#spinstall usearch
