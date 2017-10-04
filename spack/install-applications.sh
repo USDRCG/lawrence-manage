@@ -20,7 +20,7 @@ spinstall () {
 }
 
 # ipv6 weirdness...
-#spinstall parallel
+#spinstall parallel # broken
 
 spinstall boost
 spinstall jdk
@@ -42,7 +42,7 @@ spinstall gromacs
 spinstall lammps
 spinstall nwchem
 # Commercial:
-spinstall namd
+#spinstall namd
 
 # Physics
 # Currently broken
@@ -52,27 +52,27 @@ spinstall namd
 # Bioinformatics
 spinstall velvet
 spinstall subread
-#spinstall freebayes
+#spinstall freebayes # broken
 spinstall varscan
 spinstall vcftools
 spinstall bamutil
 spinstall bamtools
-#spinstall mrbayes
+#spinstall mrbayes # broken
 spinstall mothur
 spinstall phylip
 spinstall picard
-#spinstall tcoffee
+#spinstall tcoffee # broken
 spinstall tophat
 spinstall bcftools
-#spinstall bcl2fastq2
-#spinstall bowtie
+#spinstall bcl2fastq2 # broken
+#spinstall bowtie # broken
 spinstall bowtie2
 spinstall bwa
 spinstall clustalo
 spinstall clustalw
 spinstall cufflinks
-#spinstall emboss
-#spinstall fastx-toolkit
+#spinstall emboss # broken
+#spinstall fastx-toolkit # broken
 spinstall fastqc
 spinstall hmmer
 # Commercial
