@@ -19,16 +19,12 @@ spinstall () {
     [ $? -ne 0 ] && exit -1
 }
 
-# ipv6 weirdness...
-#spinstall parallel # broken
-
+spinstall parallel
 spinstall boost
 spinstall jdk
 spinstall r
-# python 2
-spinstall python
-# hack for python3
-spinstall python@3.6.2
+spinstall python       # python 2
+spinstall python@3.6.2 # hack for python3
 spinstall perl
 spinstall singularity
 spinstall ffmpeg
@@ -41,39 +37,35 @@ spinstall openbabel
 spinstall gromacs
 spinstall lammps
 spinstall nwchem
-# Commercial:
-#spinstall namd
 
 # Physics
-# Currently broken
-# spinstall geant4
-# spinstall root
+spinstall root %gcc # Currently broken with icc
+# spinstall geant4 # Broken
 
 # Bioinformatics
 spinstall velvet
 spinstall subread
-#spinstall freebayes # broken
+spinstall freebayes %gcc   # won't build with intel
 spinstall varscan
 spinstall vcftools
 spinstall bamutil
 spinstall bamtools
-#spinstall mrbayes # broken
+#spinstall mrbayes     # broken
 spinstall mothur
 spinstall phylip
 spinstall picard
-#spinstall tcoffee # broken
+#spinstall tcoffee     # broken
 spinstall tophat
 spinstall bcftools
-#spinstall bcl2fastq2 # broken
-#spinstall bowtie # broken
+#spinstall bcl2fastq2  # broken
+#spinstall bowtie      # broken
 spinstall bowtie2
 spinstall bwa
 spinstall clustalo
 spinstall clustalw
 spinstall cufflinks
-#spinstall emboss # broken
+#spinstall emboss      # broken
 #spinstall fastx-toolkit # broken
 spinstall fastqc
 spinstall hmmer
-# Commercial
-#spinstall usearch
+#spinstall usearch # Manual download required, put in CWD
