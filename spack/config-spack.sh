@@ -4,6 +4,7 @@ SPACK_ROOT="/apps/spack"
 
 echo
 echo "Configuring Compilers"
+
 # Create /apps/spack/etc/spack/defaults/compilers.yaml
 module load intel
 spack compiler find --scope defaults
@@ -12,7 +13,6 @@ COMPILERS="$SPACK_ROOT/etc/spack/defaults/compilers.yaml"
 # add intel optimizations and library rpaths to config
 tac $SPACK_ROOT/etc/spack/defaults/compilers.yaml | sed -e '0,/extra_rpaths: \[\]/s//     - \/opt\/intel\/compilers_and_libraries_2017.4.196\/linux\/compiler\/lib\/intel64 \
     extra_rpaths: \ /'|tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
-
 tac $COMPILERS | sed -e '0,/flags: {}/s//\
       cflags: -O3 \
       cxxflags: -O3 \
@@ -20,6 +20,19 @@ tac $COMPILERS | sed -e '0,/flags: {}/s//\
       fflags: -O3 \
       fcflags: -O3 \
     flags:/' | tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
+
+# Build GCC 6.3 for geant4, root, using system gcc 4.8.5
+spack install gcc@6.3.0 %gcc@4.8.5
+spack compiler find --scope defaults $(spack find -p gcc@6.3.0 | tail -1)
+# and optimize it
+tac $COMPILERS | sed -e '0,/flags: {}/s//\
+      cflags: -O3 \
+      cxxflags: -O3 \
+      cppflags: -O3 \
+      fflags: -O3 \
+      fcflags: -O3 \
+    flags:/' | tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
+
 
 echo
 echo "Configuring Packages"

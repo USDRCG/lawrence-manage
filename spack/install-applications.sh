@@ -39,8 +39,9 @@ spinstall lammps
 spinstall nwchem
 
 # Physics
-spinstall root %gcc # Currently broken with icc
-# spinstall geant4 # Broken
+spinstall gcc@6.3.0 %gcc
+spinstall root %gcc@6.3.0
+spinstall geant4 %gcc@6.3.0
 
 # Bioinformatics
 spinstall velvet
