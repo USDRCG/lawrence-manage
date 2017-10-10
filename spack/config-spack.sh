@@ -21,7 +21,7 @@ tac $COMPILERS | sed -e '0,/flags: {}/s//\
       fcflags: -O3 \
     flags:/' | tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
 
-# Build GCC 6.3 for geant4, root, using system gcc 4.8.5
+## Build GCC 6.3 for geant4, root, using system gcc 4.8.5
 spack install gcc@6.3.0 %gcc@4.8.5
 spack compiler find --scope defaults $(spack find -p gcc@6.3.0 | tail -1)
 # and optimize it
@@ -53,13 +53,13 @@ MODULES="$SPACK_ROOT/etc/spack/defaults/modules.yaml"
 # Customize module names
 sed -i "/^modules:/a\
 \ \ tcl: \n \
-      whitelist: \n \
-        - 'geant4' \n \
-        - 'root' \n \
-      blacklist: \n \
-        - '%gcc' \n \
-      hash_length: 0 \n \
-      naming_scheme: '\${PACKAGE}/\${VERSION}' \n \
+    whitelist: \n \
+      - 'geant4' \n \
+      - 'root' \n \
+    blacklist: \n \
+      - '%gcc' \n \
+    hash_length: 0 \n \
+    naming_scheme: '\${PACKAGE}/\${VERSION}' \n \
     all: \n \
       conflict: \n \
         - '\${PACKAGE}' \n \
