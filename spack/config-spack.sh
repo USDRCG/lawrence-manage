@@ -33,7 +33,6 @@ tac $COMPILERS | sed -e '0,/flags: {}/s//\
       fcflags: -O3 \
     flags:/' | tac >${COMPILERS}.new && mv ${COMPILERS}.new $COMPILERS
 
-
 echo
 echo "Configuring Packages"
 PACKAGES="$SPACK_ROOT/etc/spack/defaults/packages.yaml"
