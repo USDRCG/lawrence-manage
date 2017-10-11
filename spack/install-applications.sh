@@ -15,10 +15,11 @@ export FORCE_UNSAFE_CONFIGURE=1
 spinstall () {
     echo
     echo "Installing $1"
-    $INSTALL $1
+    $INSTALL $1 
     [ $? -ne 0 ] && exit -1
 }
 
+# General
 spinstall parallel
 spinstall boost
 spinstall jdk
@@ -31,6 +32,10 @@ spinstall ffmpeg
 spinstall fftw
 spinstall paraview
 
+# Physics
+spinstall root%gcc@6.3.0
+spinstall geant4%gcc@6.3.0
+
 # Chemistry
 spinstall jmol
 spinstall openbabel
@@ -38,35 +43,30 @@ spinstall gromacs
 spinstall lammps
 spinstall nwchem
 
-# Physics
-spinstall gcc@6.3.0 %gcc
-spinstall root %gcc@6.3.0
-spinstall geant4 %gcc@6.3.0
-
 # Bioinformatics
 spinstall velvet
 spinstall subread
-spinstall freebayes %gcc   # won't build with intel
+spinstall freebayes%gcc@4.8.5 # won't build with intel
 spinstall varscan
 spinstall vcftools
 spinstall bamutil
 spinstall bamtools
-#spinstall mrbayes     # broken
+#spinstall mrbayes           # broken
 spinstall mothur
 spinstall phylip
 spinstall picard
-#spinstall tcoffee     # broken
+#spinstall tcoffee           # broken
 spinstall tophat
 spinstall bcftools
-#spinstall bcl2fastq2  # broken
-#spinstall bowtie      # broken
+#spinstall bcl2fastq2        # broken
+#spinstall bowtie            # broken
 spinstall bowtie2
 spinstall bwa
 spinstall clustalo
 spinstall clustalw
 spinstall cufflinks
-#spinstall emboss      # broken
-#spinstall fastx-toolkit # broken
+#spinstall emboss            # broken
+#spinstall fastx-toolkit     # broken
 spinstall fastqc
 spinstall hmmer
-#spinstall usearch # Manual download required, put in CWD
+#spinstall usearch           # Manual download required, put in CWD
