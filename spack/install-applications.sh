@@ -18,6 +18,9 @@ spinstall () {
     $INSTALL $1 
     [ $? -ne 0 ] && exit -1
 }
+# Physics
+spinstall root%gcc@6.3.0
+spinstall "geant4%gcc@6.3.0 -qt"       # Fails wieh including QT
 
 # General
 spinstall parallel
@@ -32,9 +35,6 @@ spinstall ffmpeg
 spinstall fftw
 spinstall paraview
 
-# Physics
-spinstall root%gcc@6.3.0
-spinstall geant4%gcc@6.3.0
 
 # Chemistry
 spinstall jmol
@@ -55,18 +55,18 @@ spinstall bamtools
 spinstall mothur
 spinstall phylip
 spinstall picard
-#spinstall tcoffee           # broken
+#spinstall tcoffee           # broken, dependency ViennaRNA fails
 spinstall tophat
 spinstall bcftools
-#spinstall bcl2fastq2        # broken
-#spinstall bowtie            # broken
+#spinstall bcl2fastq2        # broken, fetch fails
+spinstall bowtie%gcc@4.8.5
 spinstall bowtie2
 spinstall bwa
 spinstall clustalo
 spinstall clustalw
 spinstall cufflinks
-#spinstall emboss            # broken
-#spinstall fastx-toolkit     # broken
+#spinstall emboss            # broken, fetch fails
+spinstall fastx-toolkit%gcc@4.8.5
 spinstall fastqc
 spinstall hmmer
 #spinstall usearch           # Manual download required, put in CWD
