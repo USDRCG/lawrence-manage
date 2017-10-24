@@ -46,7 +46,7 @@ spinstall nwchem
 # Bioinformatics
 spinstall velvet
 spinstall subread
-spinstall freebayes%gcc@4.8.5 # won't build with intel
+spinstall freebaye
 spinstall varscan
 spinstall vcftools
 spinstall bamutil
@@ -59,14 +59,14 @@ spinstall picard
 spinstall tophat
 spinstall bcftools
 #spinstall bcl2fastq2        # broken, fetch fails
-spinstall bowtie%gcc@4.8.5
+spinstall bowtie
 spinstall bowtie2
 spinstall bwa
 spinstall clustalo
 spinstall clustalw
 spinstall cufflinks
 #spinstall emboss            # broken, fetch fails
-spinstall fastx-toolkit%gcc@4.8.5
+spinstall fastx-toolkit
 spinstall fastqc
 spinstall hmmer
 #spinstall usearch           # Manual download required, put in CWD

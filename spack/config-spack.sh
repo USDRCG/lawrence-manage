@@ -36,8 +36,8 @@ tac $COMPILERS | sed -e '0,/flags: {}/s//\
 echo
 echo "Configuring Packages"
 PACKAGES="$SPACK_ROOT/etc/spack/defaults/packages.yaml"
-# Prefer intel over gcc over pgi
-sed -i 's/^    compiler: \[gcc, intel, pgi, clang, xl, nag\]/    compiler: \[intel, gcc, pgi, clang, xl, nag\]/g' \
+# Prefer intel over gcc over pgi, use intel-mkl where possible
+sed -i 's/^    compiler: \[gcc, intel, pgi, clang, xl, nag\]/    compiler: \[intel@17.0.4, gcc@4.8.5, pgi\]/g' \
         $PACKAGES
 sed -i 's/blas: \[openblas\]/blas: \[intel-mkl\]/g' \
         $PACKAGES
@@ -45,6 +45,26 @@ sed -i 's/lapack: \[openblas\]/lapack: \[intel-mkl\]/g' \
         $PACKAGES
 sed -i 's/scalapack: \[netlib-scalapack\]/scalapack: \[intel-mkl\]/g' \
         $PACKAGES
+
+# Specific package customization
+cat << EOF >>$PACKAGES
+  freebayes:
+    compiler: [gcc]
+  fastx-toolkit:
+    compiler: [gcc]
+  bowtie:
+    compiler: [gcc]
+  geant4:
+    compiler: [gcc@6.3.0]
+    variants: -qt
+  root:
+    compiler: [gcc@6.3.0]
+  intel-mkl:
+    buildable: False
+    paths:
+      intel-mkl@17.0.4%intel@17.0.4 arch=linux-x86_64: /opt/intel
+EOF
+
 
 echo
 echo "Configuring Modules"
