@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# need at least 1 arg
+if [ -z $1 ]; then
+	echo
+	echo "You must supply a username and (optionally) a domain name."
+	echo "If no domain name is supplied, usd.local is assumed."
+	echo "Usage:"
+	echo -e "\t $0 <username> [domain name]"
+	echo "EXAMPLES:"
+	echo -e "\t $0 jsmith"
+	echo -e "\t $0 jsmith jacks.local"
+	echo
+	exit 1
+fi
+
+USERNAME=$1
+DOMAIN="usd.local"
+if [ ! -z $2 ]; then
+	DOMAIN="$2"
+fi
+
+uid=$(/bin/id -u $USERNAME)
+GID="1093600513" # "domain users@usd.local"
+
+echo "Setting up user $USERNAME with uid $uid"
+
+STORAGE_HOST="zfs01"
+FILESYSTEM="storage/home/$USERNAME"
+MOUNTPOINT="/storage/home/$DOMAIN/$USERNAME"
+QUOTA="250GB"
+
+ssh $STORAGE_HOST <<EOF
+zfs create $FILESYSTEM
+zfs set mountpoint=$MOUNTPOINT $FILESYSTEM
+zfs set quota=$QUOTA $FILESYSTEM
+chown $uid:$GID $MOUNTPOINT
+chmod 700 $MOUNTPOINT
+EOF
+
+echo "Done"
+exit 0

@@ -1,0 +1,50 @@
+#!/bin/bash
+# Sets up a shared group directory
+# Assumes GROUP and ADMINGROUP have been created already
+
+# need 3 args
+if [ -z $3 ]; then
+	echo
+	echo "You must supply a group name and admin group name"
+	echo "Usage:"
+	echo -e "\t $0 <dir name> <group name> <admin group name>"
+	echo "EXAMPLE:"
+	echo -e "\t $0 smithlab smithlabadmin"
+	echo
+	exit 1
+fi
+
+DIRNAME=$1
+GROUPNAME=$2
+ADMINGROUPNAME=$3
+
+gid=$(/bin/getent group $GROUPNAME | cut -d: -f3)
+[ -z "$gid" ] && echo "Can't get gid for $GROUPNAME" && exit 1
+
+agid=$(/bin/getent group $ADMINGROUPNAME | cut -d: -f3)
+[ -z "$agid" ] && echo "Can't get gid for $ADMINGROUPNAME" && exit 1
+
+echo "Setting up group directory $DIRNAME with groups $GROUPNAME and $ADMINGROUPNAME"
+#echo $gid
+#echo $agid
+
+STORAGE_HOST="zfs01"
+FILESYSTEM="storage/home/$DIRNAME"
+MOUNTPOINT="/storage/home/$DIRNAME"
+QUOTA="5TB"
+
+ssh $STORAGE_HOST <<EOF
+zfs create $FILESYSTEM
+zfs set mountpoint=$MOUNTPOINT $FILESYSTEM
+zfs set quota=$QUOTA $FILESYSTEM
+chown root:$agid $MOUNTPOINT
+chmod 770 $MOUNTPOINT
+
+mkdir $MOUNTPOINT/shared
+chown root:$gid $MOUNTPOINT/shared
+chmod 770 $MOUNTPOINT/shared
+
+EOF
+
+echo "Done"
+exit 0
