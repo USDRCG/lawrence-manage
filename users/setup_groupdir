@@ -9,7 +9,7 @@ if [ -z $3 ]; then
 	echo "Usage:"
 	echo -e "\t $0 <dir name> <group name> <admin group name>"
 	echo "EXAMPLE:"
-	echo -e "\t $0 smithlab smithlabadmin"
+	echo -e "\t $0 smithlab smithusers smithadmins"
 	echo
 	exit 1
 fi
