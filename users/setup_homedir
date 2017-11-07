@@ -28,7 +28,7 @@ echo "Setting up user $USERNAME with uid $uid"
 STORAGE_HOST="zfs01"
 FILESYSTEM="storage/home/$USERNAME"
 MOUNTPOINT="/storage/home/$DOMAIN/$USERNAME"
-QUOTA="250GB"
+QUOTA="50GB"
 
 ssh $STORAGE_HOST <<EOF
 zfs create $FILESYSTEM
