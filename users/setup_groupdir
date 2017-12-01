@@ -1,6 +1,6 @@
 #!/bin/bash
 # Sets up a shared group directory
-# Assumes GROUP and ADMINGROUP have been created already
+# Assumes GROUP and ADMINGROUP have been created in AD already
 
 # need 3 args
 if [ -z $3 ]; then

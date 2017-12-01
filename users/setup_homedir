@@ -8,7 +8,7 @@ if [ -z $1 ]; then
 	echo "Usage:"
 	echo -e "\t $0 <username> [domain name]"
 	echo "EXAMPLES:"
-	echo -e "\t $0 jsmith"
+	echo -e "\t $0 bjohnson"
 	echo -e "\t $0 jsmith jacks.local"
 	echo
 	exit 1
