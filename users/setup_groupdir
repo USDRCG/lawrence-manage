@@ -24,9 +24,7 @@ gid=$(/bin/getent group $GROUPNAME | cut -d: -f3)
 agid=$(/bin/getent group $ADMINGROUPNAME | cut -d: -f3)
 [ -z "$agid" ] && echo "Can't get gid for $ADMINGROUPNAME" && exit 1
 
-echo "Setting up group directory $DIRNAME with groups $GROUPNAME and $ADMINGROUPNAME"
-#echo $gid
-#echo $agid
+echo "Setting up group directory $DIRNAME with groups $GROUPNAME(gid=$gid) and $ADMINGROUPNAME(gid=$agid)"
 
 STORAGE_HOST="zfs01"
 FILESYSTEM="storage/home/$DIRNAME"
