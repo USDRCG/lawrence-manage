@@ -3,6 +3,8 @@
 # need at least 1 arg
 if [ -z $1 ]; then
 	echo
+	echo "Creates a new ZFS filesystem called storage/home/<username> with mountpoint /home/<domain name>/<username>"
+	echo
 	echo "You must supply a username and (optionally) a domain name."
 	echo "If no domain name is supplied, usd.local is assumed."
 	echo "Usage:"
