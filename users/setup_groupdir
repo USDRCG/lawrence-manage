@@ -5,7 +5,11 @@
 # need 3 args
 if [ -z $3 ]; then
 	echo
+	echo "Creates a new ZFS filesystem storage/home/<dir name> with mountpoint /home/<dir name> writable by aneone in the admin group."
+	echo "Also creates a shared folder in /home/<dir name>/shared that all group members can write to."
+	echo
 	echo "You must supply a group name and admin group name"
+	echo "The groups <group name> and <admin group name> must exist before running this script"
 	echo "Usage:"
 	echo -e "\t $0 <dir name> <group name> <admin group name>"
 	echo "EXAMPLE:"
