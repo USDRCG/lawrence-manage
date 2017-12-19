@@ -40,7 +40,6 @@ chown $uid:$GID $MOUNTPOINT
 chmod 700 $MOUNTPOINT
 EOF
 
-# /storage/home/usd.local/nbrady          10.1.1.0/255.255.255.0(rw,no_root_squash,async) 10.3.1.0/255.255.255.0(rw,no_root_squash,async)
 ssh $STORAGE_HOST <<EOF
 echo $MOUNTPOINT '10.1.1.0/255.255.255.0(rw,no_root_squash,async) 10.3.1.0/255.255.255.0(rw,no_root_squash,async)' >>/etc/exports
 exportfs -r
