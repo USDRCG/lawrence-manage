@@ -33,20 +33,30 @@ MOUNTPOINT="/storage/home/$DOMAIN/$USERNAME"
 QUOTA="50GB"
 
 ssh $STORAGE_HOST <<EOF
-zfs create $FILESYSTEM
-zfs set mountpoint=$MOUNTPOINT $FILESYSTEM
-zfs set quota=$QUOTA $FILESYSTEM
+zfs create -o mountpoint=$MOUNTPOINT -o quota=$QUOTA $FILESYSTEM
 chown $uid:$GID $MOUNTPOINT
 chmod 700 $MOUNTPOINT
 EOF
 
-# /storage/home/usd.local/nbrady          10.1.1.0/255.255.255.0(rw,no_root_squash,async) 10.3.1.0/255.255.255.0(rw,no_root_squash,async)
-ssh $STORAGE_HOST <<EOF
-echo $MOUNTPOINT '10.1.1.0/255.255.255.0(rw,no_root_squash,async) 10.3.1.0/255.255.255.0(rw,no_root_squash,async)' >>/etc/exports
-exportfs -r
-EOF
 
-mount -o remount /home
+
+# /storage/home/usd.local/nbrady          10.1.1.0/255.255.255.0(rw,no_root_squash,async) 10.3.1.0/255.255.255.0(rw,no_root_squash,async)
+#ssh $STORAGE_HOST <<EOF
+#echo $MOUNTPOINT '10.1.1.0/255.255.255.0(rw,no_root_squash,async) 10.3.1.0/255.255.255.0(rw,no_root_squash,async)' >>/etc/exports
+#exportfs -r
+#EOF
+
+#mount -o remount /home
+
+
+# Copy dotfiles
+tar -C /etc/skel -cf - . | tar -C /home/$DOMAIN/$USERNAME -xf -
+chown -R $uid:$GID /home/$DOMAIN/$USERNAME
+chmod 700 /home/$DOMAIN/$USERNAME
+
 
 echo "Done"
+echo
+echo "Now run su -l $USERNAME"
+
 exit 0
