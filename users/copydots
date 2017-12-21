@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Copy dotfiles from /etc/skel to ~/
+
+# Run this on the headnode
+
+tar -C /etc/skel -cf - . | tar -C ~ -xf -
