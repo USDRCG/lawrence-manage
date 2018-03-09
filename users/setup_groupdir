@@ -18,9 +18,9 @@ if [ -z $3 ]; then
 	exit 1
 fi
 
-DIRNAME=$1
-GROUPNAME=$2
-ADMINGROUPNAME=$3
+DIRNAME="$1"
+GROUPNAME="$2"
+ADMINGROUPNAME="$3"
 
 gid=$(/bin/getent group $GROUPNAME | cut -d: -f3)
 [ -z "$gid" ] && echo "Can't get gid for $GROUPNAME" && exit 1

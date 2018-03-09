@@ -20,15 +20,15 @@ spinstall () {
 }
 # Physics
 spinstall root%gcc@6.3.0
-spinstall "geant4%gcc@6.3.0 -qt"       # Fails wieh including QT
+spinstall "geant4%gcc@6.3.0 -qt"       # Fails when including QT
 
 # General
 spinstall parallel
 spinstall boost
 spinstall jdk
 spinstall r
-spinstall python       # python 2
-spinstall python@3.6.2 # hack for python3
+spinstall python@2
+spinstall python@3
 spinstall perl
 spinstall singularity
 spinstall ffmpeg
@@ -38,22 +38,22 @@ spinstall paraview
 
 # Chemistry
 spinstall jmol
-spinstall openbabel
+#spinstall openbabel
 spinstall gromacs
 spinstall lammps
-spinstall nwchem
+#spinstall nwchem
 
 # Bioinformatics
 spinstall velvet
 spinstall subread
-spinstall freebaye
+#spinstall freebayes
 spinstall varscan
 spinstall vcftools
 spinstall bamutil
 spinstall bamtools
 #spinstall mrbayes           # broken
 spinstall mothur
-spinstall phylip
+# spinstall phylip
 spinstall picard
 #spinstall tcoffee           # broken, dependency ViennaRNA fails
 spinstall tophat
