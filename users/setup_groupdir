@@ -1,6 +1,6 @@
 #!/bin/bash
 # Sets up a shared group directory
-# Assumes GROUP and ADMINGROUP have been created in AD already
+# PRE: Assumes GROUP and ADMINGROUP have been created in AD already
 
 # need 3 args
 if [ -z $3 ]; then
@@ -39,12 +39,13 @@ ssh $STORAGE_HOST <<EOF
 zfs create $FILESYSTEM
 zfs set mountpoint=$MOUNTPOINT $FILESYSTEM
 zfs set quota=$QUOTA $FILESYSTEM
-chown root:$agid $MOUNTPOINT
-chmod 770 $MOUNTPOINT
+chown root:$gid $MOUNTPOINT
+chmod 750 $MOUNTPOINT
 
 mkdir $MOUNTPOINT/shared
 chown root:$gid $MOUNTPOINT/shared
 chmod 770 $MOUNTPOINT/shared
+chmod g+s $MOUNTPOINT/shared
 
 EOF
 
