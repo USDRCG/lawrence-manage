@@ -16,6 +16,7 @@ modules:
        - 'jdk' 
        - 'r%intel' 
        - 'python%intel' 
+       - 'py-numpy%intel' 
        - 'perl%intel' 
        - 'singularity' 
        - 'ffmpeg' 

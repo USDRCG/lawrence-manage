@@ -31,22 +31,22 @@ compilers:
       fc: /opt/intel/compilers_and_libraries_2017.4.196/linux/bin/intel64/ifort
     spec: intel@17.0.4
     target: x86_64
-- compiler:
-    environment: {}
-    extra_rpaths: []
-    flags:
-      fcflags: -O3 
-      fflags: -O3 
-      cppflags: -O3 
-      cxxflags: -O3 
-      cflags: -O3 
-    
-    modules: []
-    operating_system: centos7
-    paths:
-      cc: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/gcc
-      cxx: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/g++
-      f77: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/gfortran
-      fc: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/gfortran
-    spec: gcc@6.3.0
-    target: x86_64
+#- compiler:
+#    environment: {}
+#    extra_rpaths: []
+#    flags:
+#      fcflags: -O3 
+#      fflags: -O3 
+#      cppflags: -O3 
+#      cxxflags: -O3 
+#      cflags: -O3 
+#    
+#    modules: []
+#    operating_system: centos7
+#    paths:
+#      cc: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/gcc
+#      cxx: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/g++
+#      f77: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/gfortran
+#      fc: /apps/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.3.0-4gdmvol7flqoeidsehy6odhxujppkxux/bin/gfortran
+#    spec: gcc@6.3.0
+#    target: x86_64

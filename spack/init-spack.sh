@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SPACK_REPO="https://github.com/llnl/spack.git"
-SPACK_ROOT="/apps/spack"
+SPACK_ROOT="/mnt/spack-next"
 
 echo
 echo "Preparing installation directory $SPACK_ROOT"
