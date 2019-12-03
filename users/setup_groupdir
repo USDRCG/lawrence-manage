@@ -22,6 +22,14 @@ DIRNAME="$1"
 GROUPNAME="$2"
 ADMINGROUPNAME="$3"
 
+# We need to force lowercase usernames because admins forget when creating lab directories
+# and to ensure consistency in naming, we want all lab directories to be lower case.
+# Added by bill - 20191202
+DIRNAME=$(echo $DIRNAME | awk '{print tolower($0)}')
+GROUPNAME=$(echo $GROUPNAME | awk '{print tolower($0)}')
+ADMINGROUPNAME=$(echo $ADMINGROUPNAME | awk '{print tolower($0)}')
+
+
 gid=$(/bin/getent group $GROUPNAME | cut -d: -f3)
 [ -z "$gid" ] && echo "Can't get gid for $GROUPNAME" && exit 1
 
