@@ -39,8 +39,24 @@ def sum_jobs_into_node_hours(jobs, month, username):
     node_hours = 0
     for job in jobs.splitlines():
         jobid, num_nodes, elapsed, start, end = job.split('|')
-        dt_start = datetime.datetime.strptime(start, date_format)
-        dt_end = datetime.datetime.strptime(end, date_format)
+        # We may run into still running jobs, let's treat each type differently.
+        # If the job hasn't started yet, we will ignore it, but if it's already
+        # running, we will set the end time to the current time.
+	try:
+	    if start == "Unknown":
+                continue
+            dt_start = datetime.datetime.strptime(start, date_format)
+        except:
+            print("Error with Start time: " + str(start))
+	    exit(-1)
+        try:
+	    if end == "Unknown":
+                dt_end = datetime.datetime.today()
+	    else:
+                dt_end = datetime.datetime.strptime(end, date_format)
+        except:
+            print("Error with End time: " + str(end))
+            exit(-1)
         # Note: We only care about jobs that started this month, if a job
         # started last month, we are going to count that in the data from the
         # previous month. To accomplish this, skip any jobs that don't start
@@ -156,7 +172,7 @@ def main():
 
     # Print totals
     print "---------------------------------------"
-    print "Total Node Hours for " + str(year) + "/" + str(month) + ":   " + str(round(total_hours, 2))
+    print "Total Node Hours for " + str(year) + "/" + str(month).zfill(2) + ":   " + str(round(total_hours, 2))
 
 
 if __name__ == "__main__":
