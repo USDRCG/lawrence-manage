@@ -21,7 +21,7 @@ fi
 AT="@"
 if [[ "$1" =~ "$AT" ]];
 then
-    echo "Make sure you don't include the @domain.local in the username"
+    echo "Make sure you DON'T include the @domain.local in the username. Exiting..."
     exit 1
 fi
 
@@ -30,6 +30,14 @@ USERNAME=$1
 DOMAIN="usd.local"
 if [ ! -z $2 ]; then
 	DOMAIN="$2"
+fi
+
+# We need to make sure the username isn't longer than 20 characters or we will create a zfs
+# dataset that won't get used (the system only gets 20 character usernames to use from AD).
+# - Added by bill - 20210527
+if [ ${#USERNAME} -gt 20 ]; then
+	echo "Please use windows pre-2000 style usernames truncated to 20 characters. Exiting..."
+	exit
 fi
 
 # We need to force lowercase usernames because admins forget when creating home directories

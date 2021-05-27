@@ -39,6 +39,8 @@ def sum_jobs_into_node_hours(jobs, month, username):
     node_hours = 0
     for job in jobs.splitlines():
         jobid, num_nodes, elapsed, start, end = job.split('|')
+        if debug_job_numbers:
+            print jobid, num_nodes, elapsed, start, end
         # We may run into still running jobs, let's treat each type differently.
         # If the job hasn't started yet, we will ignore it, but if it's already
         # running, we will set the end time to the current time.
