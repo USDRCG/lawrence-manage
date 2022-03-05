@@ -38,7 +38,7 @@ agid=$(/bin/getent group $ADMINGROUPNAME | cut -d: -f3)
 
 echo "Setting up group directory $DIRNAME with groups $GROUPNAME(gid=$gid) and $ADMINGROUPNAME(gid=$agid)"
 
-STORAGE_HOST="zfs01"
+STORAGE_HOST="zfs02"
 FILESYSTEM="storage/home/$DIRNAME"
 MOUNTPOINT="/storage/home/$DIRNAME"
 QUOTA="5TB"

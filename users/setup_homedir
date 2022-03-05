@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # need at least 1 arg
-if [ -z $1 ]; then
+if [ -z $1 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
 	echo
 	echo "Creates a new ZFS filesystem called storage/home/<username> with mountpoint /home/<domain name>/<username>"
 	echo
@@ -25,7 +25,6 @@ then
     exit 1
 fi
 
-
 USERNAME=$1
 DOMAIN="usd.local"
 if [ ! -z $2 ]; then
@@ -46,6 +45,12 @@ fi
 USERNAME=$(echo $USERNAME | awk '{print tolower($0)}')
 
 uid=$(/bin/id -u "$USERNAME"@"$DOMAIN")
+if [ $? -ne 0 ]; then # Something bad happened with id, exit
+	echo "id errored when checking $USERNAME"
+	echo "exiting..."
+	exit
+fi
+
 GID="1093600513" # "domain users@usd.local"
 
 echo "Setting up user $USERNAME with uid $uid"
