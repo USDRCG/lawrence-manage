@@ -11,7 +11,7 @@ import mail
 
 # static variables
 lab_name = "synthetik_lab"
-default_email_to_list = ['bill.conn@usd.edu']
+default_email_to_list = ['ryan.johnson@usd.edu','bill.conn@usd.edu']
 email_from = "rcg@usd.edu"
 debug_job_numbers = False
 
@@ -128,7 +128,7 @@ def select_month_to_gather_data():
 
 def get_emails_to_send_to():
     print 'Default recipient(s): ' + str(default_email_to_list)
-    if yes_or_no("Build your own list?"):
+    if no_or_yes("Build your own list?"):
         email_list = []
         done = False
         while not done:
@@ -151,6 +151,17 @@ def yes_or_no(question):
         reply = str(raw_input(question + ' (Y/n) (default = y): ')).lower().strip()
         if len(reply) == 0:
             reply = 'y'
+        if reply[0] == 'y':
+            return True
+        if reply[0] == 'n':
+            return False
+
+
+def no_or_yes(question):
+    while "user makes an invalid choice":
+        reply = str(raw_input(question + ' (y/N) (default = n): ')).lower().strip()
+        if len(reply) == 0:
+            reply = 'n'
         if reply[0] == 'y':
             return True
         if reply[0] == 'n':
@@ -208,7 +219,6 @@ def main():
     hour_data = []
     total_hours = 0
     for user in gather_users():
-        print user
         node_hours = get_node_hours_from_sacct(user, year, month)
         total_hours += node_hours
         hour_data.append([str(year) + "/" + str(month).zfill(2), user, str(node_hours)])
@@ -225,7 +235,7 @@ def main():
     if yes_or_no("Email results?"):
         to_list = get_emails_to_send_to()
         print "Sending mail to: " + str(to_list)
-        subject = "Synthetik job usage for " + get_english_month(month) + year
+        subject = "Synthetik job usage for " + get_english_month(str(month)) + " " + str(year)
         send_mail(to_list,email_from,subject,output)
 
 
