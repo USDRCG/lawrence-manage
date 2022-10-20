@@ -35,7 +35,7 @@ fi
 wget https://github.com/apptainer/apptainer/releases/download/v${VERSION}/apptainer-${VERSION}.tar.gz && \
 tar -xzf apptainer-${VERSION}.tar.gz && \
 cd apptainer-$VERSION && \
-./mconfig --prefix=/apps/apptainer/"$VERSION" --localstatedir=/scratch && \
+./mconfig --without-suid --prefix=/apps/apptainer/"$VERSION" --localstatedir=/scratch && \
 cd builddir && \
 make && \
 make install
