@@ -1,22 +1,31 @@
 #!/bin/bash
-# Default to installing apptainer version 1.0.2
-# the latest version as of 2022-05-16
+# Default to installing apptainer version 1.1.7
+# the latest version as of 2023-04-12
 if [ -z "$1" ]; then
-	VERS=1.0.2    
+	VERS=1.1.7
 else
 	VERS="$1"
 fi
 
+# set Apptainer version
+export VERSION=$VERS
+
+# set Go version
+export GO_VERSION=1.20.3
+
 # set Apptainer directory
 APPTAINER_DIR=/apps/apptainer/
 APPTAINER_BUILD_DIR=$APPTAINER_DIR/build
+
+# set Module paths
+MODULE_TEMPLATE=$(readlink -f module-template.txt)
+MODULE_PATH=/opt/modulefiles/apptainer/${VERSION}-go-${GO_VERSION}
+
 # Change to apptainer build directory
 cd $APPTAINER_BUILD_DIR
 
-# We've already got golang 1.18.2 binary
+# add go to PATH
 export PATH=$PWD/golang/go/bin:$PATH
-
-export VERSION=$VERS
 
 # Check if already exists
 if [ -d "apptainer-$VERSION" ]; then
@@ -26,7 +35,7 @@ if [ -d "apptainer-$VERSION" ]; then
         case $yn in
             [Yy]* ) rm -rf "$APPTAINER_BUILD_DIR/apptainer-$VERSION" "$APPTAINER_BUILD_DIR/apptainer-$VERSION.tar.gz" "$APPTAINER_DIR/$VERSION"; break;;
             [Nn]* ) exit;;
-            * ) echo "Please answer yes or no.";;
+            * ) echo "Please answer y (yes) or n (no).";;
         esac
     done
 fi
@@ -43,5 +52,6 @@ make install
 # Finalize
 echo "Apptainer version $VERSION installed to $APPTAINER_DIR/$VERSION"
 echo
-echo "WARNING! INSTALLATION NOT FINISHED, MODULEFILE NEEDED!"
-echo "Please generate/update/create a module for Apptainer $VERSION in /act/modulefiles/apptainer/"
+sed "s/__SED_REPLACE_ME_WITH_VERSION__/\"${VERSION}\"/" "${MODULE_TEMPLATE}" > ${MODULE_PATH}
+echo "Modulefile installed at: ${MODULE_PATH}"
+
