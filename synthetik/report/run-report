@@ -99,15 +99,17 @@ def sum_jobs_into_node_hours(verbose, jobs, month, username):
         # We may run into still running jobs, let's treat each type differently.
         # If the job hasn't started yet, we will ignore it, but if it's already
         # running, we will set the end time to the current time.
+        # Also note: cancelled jobs that have no start and no end will show up as
+        # with the string 'None', so check for that too.
         try:
-            if start == "Unknown":
+            if start == "None"  or start == "Unknown":
                 continue
             dt_start = datetime.datetime.strptime(start, date_format)
         except:
             print("Error with Start time: " + str(start))
             exit(-1)
         try:
-            if end == "Unknown":
+            if end == "None" or end == "Unknown":
                 dt_end = datetime.datetime.today()
             else:
                 dt_end = datetime.datetime.strptime(end, date_format)
