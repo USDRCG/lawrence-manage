@@ -21,3 +21,4 @@ prepend-path MANPATH /apps/apptainer/$env(APPTAINER_VERSION)/share/man
 
 setenv APPTAINER_TMPDIR /scratch/job_$env(SLURM_JOB_ID)
 setenv APPTAINER_LOCALCACHEDIR /scratch/job_$env(SLURM_JOB_ID)
+setenv APPTAINER_CACHEDIR /scratch/job_$env(SLURM_JOB_ID)
