@@ -16,7 +16,7 @@ from email.message import EmailMessage
 print_output = True
 email_users = False
 lab_name = "synthetik_lab"
-default_email_to_list = 'ryan.johnson@usd.edu,bill.conn@usd.edu'
+default_email_to_list = 'ryan.johnson@usd.edu,bill.conn@usd.edu,vonk@synthetik-technologies.com'
 #default_email_to_list = 'bill.conn@usd.edu'
 email_from = "rcg@usd.edu"
 
