@@ -1,4 +1,5 @@
 import datetime
+from datetime import timedelta
 from io import StringIO
 import smtplib
 from email.message import EmailMessage
@@ -26,7 +27,7 @@ class EmailBadLogins:
 
     def __create_email_body(self, main_body):
         message_body = StringIO()
-        date = datetime.date.today()
+        date = datetime.date.today() - timedelta(days=1)
         print(f"Here is a list of bad logins for {date}", file=message_body)
         print("", file=message_body)
         print(main_body, file=message_body)
