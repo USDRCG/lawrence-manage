@@ -15,6 +15,8 @@ class EmailBadLogins:
         self.recipients = email_to
         if not email_from:
             self.email_from = "rcg@usd.edu"
+        else:
+            self.email_from = email_from
         if not subject:
             raise RuntimeError("Need a subject for email")
         self.subject = subject
