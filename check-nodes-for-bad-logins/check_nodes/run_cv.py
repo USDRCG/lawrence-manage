@@ -14,7 +14,7 @@ class CallCvExec():
             if os.geteuid() != 0:
                 raise RuntimeError("This should only be run as root")
 
-            p = subprocess.run(self.command, shell=True, check=True, capture_output=True, encoding='utf-8')
+            p = subprocess.run(self.command, check=False, capture_output=True, encoding='utf-8')
 
             # Check return code for error
             # Actually, ignore this, if a node reports an error, cv-exec doesn't exit with returncode 0
