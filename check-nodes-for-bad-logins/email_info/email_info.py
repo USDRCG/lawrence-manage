@@ -14,7 +14,7 @@ class EmailBadLogins:
             raise RuntimeError("Need at least one recipient")
         self.recipients = email_to
         if not email_from:
-            self.email_from = "root@lawrence-headnode.usd.edu"
+            self.email_from = "rcg@usd.edu"
         if not subject:
             raise RuntimeError("Need a subject for email")
         self.subject = subject
@@ -44,4 +44,4 @@ class EmailBadLogins:
         s.quit()
 
     def send_emails(self):
-        self._send_mail(str(self.recipients), self.email_from, self.subject, self.message_body)
+        self._send_mail(",".join(self.recipients), self.email_from, self.subject, self.message_body)
