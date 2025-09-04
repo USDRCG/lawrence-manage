@@ -1,0 +1,331 @@
+#!/usr/bin/env python
+
+# imports
+import argparse
+import calendar
+import datetime
+import math
+import sys
+import subprocess
+import os
+import smtplib
+import textwrap
+from email.message import EmailMessage
+
+# static variables
+print_output = True
+email_users = False
+lab_name = "synthetik_lab"
+default_email_to_list = 'ryan.johnson@usd.edu,bill.conn@usd.edu'
+#default_email_to_list = 'bill.conn@usd.edu'
+email_from = "rcg@usd.edu"
+
+
+def parse_args(argv):
+    parser = argparse.ArgumentParser(description='Collects per month usage data on synthetik lab users and then will print and/or email_info results out.')
+    parser.add_argument('-i', '--interactive', dest='interactive', default=True, action='store_true',
+                        help='Prompt user for options (default: True)')
+    parser.add_argument('-n', '--non-interactive', dest='interactive', default=True, action='store_false',
+                        help='Non-Interactive mode: don\'t prompt user, only run as defined by defaults and passed options')
+    parser.add_argument('-D', '--dry-run', dest='dry_run', default=False, action='store_true',
+                        help='Don\'t actually send emails (default: False)')
+    parser.add_argument('-p', '--print-output', dest='print_output', default=True, action='store_true',
+                        help='Print report to standard out (default: True)')
+    parser.add_argument('-q', '--no-print-output', dest='print_output', default=True, action='store_false',
+                        help='Quiet mode, do nont print output to standard out')
+    parser.add_argument('-e', '--send-email_info', dest='send_email', default=False, action='store_true',
+                        help='Email the results to the admins (default: False)')
+    parser.add_argument('-N', '--no-send-email_info', dest='send_email', default=False, action='store_false',
+                        help='Do not send emails')
+    parser.add_argument('-l', '--list-of-emails', dest='email_addresses', type=str, default=default_email_to_list,
+                        help='Comma separated list of emails to send to, overrides default email_info list')
+    parser.add_argument('year_month', metavar='YYYY/mm', type=str, nargs='?',
+                        help='The year and month to collect data on (default: prompt user)')
+    parser.add_argument('-v', '--verbose', action='store_true')  # on/off flag
+    args = parser.parse_args()
+
+    return args
+
+def send_mail(to, fro, subject, message):
+    #mail.sendMail(to, fro, subject, message)
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['From'] = fro
+    msg['To'] = to
+    msg.set_content(message)
+
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
+
+
+def get_english_month(month):
+    return datetime.datetime.strptime(month, "%m").strftime("%B")
+
+
+def get_lab():
+    return subprocess.check_output(['getent', 'group', 'synthetik_lab'])
+    #  return "synthetik_lab@usd.local:*:1093786979:peter.vonk@usd.local,jeffrey.heylmun@usd.local\n"
+
+
+def gather_users():
+    full_line = get_lab().rstrip().decode()
+    return full_line.split(":")[-1].split(",")
+
+
+def get_node_hours_from_sacct(verbose, username, year, month):
+    start_day_of_week, last_day = calendar.monthrange(year, month)
+    start = str(year) + '-' + str(month).zfill(2) + '-01T00:00:00'
+    end = str(year) + '-' + str(month).zfill(2) + '-' + str(last_day).zfill(2) + 'T23:59:59'
+    sacct_output_format = "JobID,NNodes,Elapsed,Start,End"
+    args = ['sacct', '-n', '-P', '-X', '-u', username, '-S', start, '-E', end, '-o', sacct_output_format]
+    if verbose:
+        print(" ".join(args))
+    return sum_jobs_into_node_hours(verbose, subprocess.check_output(args), month, username)
+
+
+def sum_jobs_into_node_hours(verbose, jobs, month, username):
+    if verbose:
+        print("Jobs: " + jobs.decode())
+        print("Month: " + str(month))
+        print("User: " + username)
+    date_format = "%Y-%m-%dT%H:%M:%S"
+    seconds_in_an_hour = 3600
+    node_hours = 0
+    for job in jobs.decode().splitlines():
+        jobid, num_nodes, elapsed, start, end = job.split('|')
+        if verbose:
+            print(jobid, num_nodes, elapsed, start, end)
+        # We may run into still running jobs, let's treat each type differently.
+        # If the job hasn't started yet, we will ignore it, but if it's already
+        # running, we will set the end time to the current time.
+        # Also note: cancelled jobs that have no start and no end will show up as
+        # with the string 'None', so check for that too.
+        try:
+            if start == "None"  or start == "Unknown":
+                continue
+            dt_start = datetime.datetime.strptime(start, date_format)
+        except:
+            print("Error with Start time: " + str(start))
+            exit(-1)
+        try:
+            if end == "None" or end == "Unknown":
+                dt_end = datetime.datetime.today()
+            else:
+                dt_end = datetime.datetime.strptime(end, date_format)
+        except:
+            print("Error with End time: " + str(end))
+            exit(-1)
+        # Note: We only care about jobs that started this month, if a job
+        # started last month, we are going to count that in the data from the
+        # previous month. To accomplish this, skip any jobs that don't start
+        # this month.
+        if dt_start.month != month:
+            continue
+        # Note: for the hours, we convert seconds to hours,
+        # then use a ceiling function to always 'round up'
+        # hours = math.ceil((dt_end - dt_start).total_seconds() / seconds_in_an_hour)
+        # Actually, lets round each job to 2 decimal places for a more accurate reading
+        # hours = round((dt_end - dt_start).total_seconds() / seconds_in_an_hour, 4)
+        hours = (dt_end - dt_start).total_seconds() / seconds_in_an_hour
+        node_hours += int(num_nodes) * hours
+        if verbose:
+            print("jobid:      " + jobid)
+            print("user:       " + username)
+            print("end:        " + end)
+            print("start:      " + start)
+            print("nodes:      " + num_nodes)
+            print("hours:      " + str(hours))
+            print("nd_hrs:     " + str(int(num_nodes) * hours))
+            print("nd_hrs_sum: " + str(node_hours))
+    return node_hours
+
+
+def year_ok(year):
+    if year < 2000 or year > 2100:
+        return False
+    return True
+
+
+def month_ok(month):
+    if month < 1 or month > 12:
+        return False
+    return True
+
+
+def select_month_to_gather_data():
+    while True:
+        question = "Enter a year: "
+        raw_year = str(input(question))
+        try:
+            year = int(raw_year)
+        except:
+            print('Enter numeric digits')
+            continue
+        if not year_ok(year):
+            print('Enter a realistic year (ex. 2020)')
+            continue
+        break
+
+    while True:
+        question = "Enter a month: "
+        raw_month = str(input(question))
+        try:
+            month = int(raw_month)
+        except:
+            print('Enter numeric digits')
+            continue
+        if not month_ok(month):
+            print('Enter a realistic month (ex. 1-12)')
+            continue
+        break
+
+    return year, month
+
+
+def get_emails_to_send_to(args):
+    # start with an empty list
+    email_list = []
+    if args.interactive:
+        print('Default recipient(s): ' + args.email_addresses)
+        if no_or_yes("Build your own list?"):
+            done = False
+            while not done:
+                new_email = input("Enter an email_info:")
+                while not yes_or_no("Is " + new_email + " correct?"):
+                    new_email = input("Reenter the email_info:")
+                    print(new_email)
+                email_list.append(new_email)
+                print("Current email_info list: " + ",".join(email_list))
+                if not yes_or_no("Add another email_info?"):
+                    done = True
+        else:
+            email_list = args.email_addresses.split(",")
+    else:
+        email_list = args.email_addresses.split(",")
+
+    return email_list
+
+
+def yes_or_no(question):
+    while "user makes an invalid choice":
+        reply = str(input(question + ' (Y/n) (default = y): ')).lower().strip()
+        if len(reply) == 0:
+            reply = 'y'
+        if reply[0] == 'y':
+            return True
+        if reply[0] == 'n':
+            return False
+
+
+def no_or_yes(question):
+    while "user makes an invalid choice":
+        reply = str(input(question + ' (y/N) (default = n): ')).lower().strip()
+        if len(reply) == 0:
+            reply = 'n'
+        if reply[0] == 'y':
+            return True
+        if reply[0] == 'n':
+            return False
+
+
+def get_year_month_from_argv1(arg):
+    year, month = arg.split("/", 2)
+    # Clean up data and convert to integers
+    year = int(year.strip())
+    month = int(month.strip())
+    # Ensure ranges make sense
+    if year < 0 or year > 9999:
+        print("year: " + year)
+        raise Error
+    if month < 1 or month > 12:
+        print("month: " + month)
+        raise Error
+    return (year, month);
+
+
+def build_output(hour_data, year, month, total_hours):
+    # build the header and then build the data
+    output = ",".join(["Year/Month", "User", "Node Hours"]) + os.linesep
+    for line in hour_data:
+        output += ",".join(line) + os.linesep
+
+    # build totals
+    output += "---------------------------------------" + os.linesep
+    output += "Total Node Hours for " + str(year) + "/" + str(month).zfill(2) + ":   " + str(
+        round(total_hours, 2)) + os.linesep
+    return output
+
+
+def send_email_to_users(args, year, month, output):
+    to_list = get_emails_to_send_to(args)
+    if args.verbose:
+        print("Sending mail to: " + str(to_list))
+    subject = "Synthetik job usage for " + get_english_month(str(month)) + " " + str(year)
+    if args.dry_run:
+        print("Dry run, will not send the following emails")
+        print("\tTo:", to_list)
+        print("\tFrom:", email_from)
+        print("\tSubject:", subject)
+        print("\tBody:")
+        print(textwrap.indent(output, "\t\t"))
+    else:
+        send_mail(to_list,email_from,subject,output)
+
+
+def get_month_and_year_from_user(args):
+    prev_month = datetime.datetime.today().replace(day=1) - datetime.timedelta(days=1)
+    year = prev_month.year
+    month = prev_month.month
+
+    if args.interactive:
+        if not yes_or_no("Gathering data for " + str(year) + "/" + str(month)):
+            year, month = select_month_to_gather_data()
+
+    return (year, month);
+
+
+def main():
+    args = parse_args(sys.argv)
+
+    if args.year_month:
+        try:
+            year, month = get_year_month_from_argv1(args.year_month)
+            if not year_ok(year) or not month_ok(month):
+                raise Error
+        except:
+            print("Error parsing year and month from:", args.year_month, file=sys.stderr)
+            year, month = get_month_and_year_from_user(args)
+    else:
+        year, month = get_month_and_year_from_user(args)
+
+    if args.verbose:
+        print("Arguments:")
+        print(args)
+    if args.verbose:
+        print("Pulling data for year:", year, "and month", month)
+   
+    hour_data = []
+    total_hours = 0
+    for user in gather_users():
+        node_hours = get_node_hours_from_sacct(args.verbose, user, year, month)
+        total_hours += node_hours
+        hour_data.append([str(year) + "/" + str(month).zfill(2), user, str(node_hours)])
+
+    # build the output
+    output = build_output(hour_data, year, month, total_hours)
+    if args.print_output:
+        print("==================================================================")
+        print("                            Output")
+        print("==================================================================")
+        print(output)
+        print("==================================================================")
+
+    if args.send_email:
+        send_email_to_users(args, year, month, output)
+    elif args.interactive and yes_or_no("Email results?"):
+        send_email_to_users(args, year, month, output)
+
+
+if __name__ == "__main__":
+    main()
