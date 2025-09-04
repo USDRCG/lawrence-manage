@@ -44,4 +44,4 @@ class EmailBadLogins:
         s.quit()
 
     def send_emails(self):
-        self._send_mail(self.recipients, self.email_from, self.subject, self.message_body)
+        self._send_mail(str(self.recipients), self.email_from, self.subject, self.message_body)
