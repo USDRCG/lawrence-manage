@@ -2,7 +2,7 @@
 # Default to installing apptainer version 1.1.7
 # the latest version as of 2023-04-12
 if [ -z "$1" ]; then
-	VERS=1.1.7
+	VERS=1.3.2
 else
 	VERS="$1"
 fi
@@ -11,7 +11,7 @@ fi
 export VERSION=$VERS
 
 # set Go version
-export GO_VERSION=1.20.3
+export GO_VERSION=1.22.4
 
 # set Apptainer directory
 APPTAINER_DIR=/apps/apptainer/

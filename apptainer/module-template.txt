@@ -7,18 +7,24 @@ if { $mode == "whatis" } { exit }
 # Note: Using ::env for global access.  This may only matter for setting?
 # See these for more info: https://stackoverflow.com/questions/37085392/tcl-how-to-check-if-environment-variable-already-set?rq=1
 # https://wiki.tcl-lang.org/page/env
-if { ![info exists ::env(SLURM_JOB_ID)] } {
-	puts stderr "This module cannot be loaded on the login node."
-        puts stderr "Please request a node (e.g. srun --pty bash)"
-	puts stderr "Failing to load module..."
-	exit -1
-}
+#if { ![info exists ::env(SLURM_JOB_ID)] } {
+#	puts stderr "This module cannot be loaded on the login node."
+#        puts stderr "Please request a node (e.g. srun --pty bash)"
+#	puts stderr "Failing to load module..."
+#	exit -1
+#}
 
 # `man singularity` seems to work without setting MANPATH so only need to
 # set the regular PATH variable.
 prepend-path PATH /apps/apptainer/$env(APPTAINER_VERSION)/bin
 prepend-path MANPATH /apps/apptainer/$env(APPTAINER_VERSION)/share/man
 
-setenv APPTAINER_TMPDIR /scratch/job_$env(SLURM_JOB_ID)
-setenv APPTAINER_LOCALCACHEDIR /scratch/job_$env(SLURM_JOB_ID)
-setenv APPTAINER_CACHEDIR /scratch/job_$env(SLURM_JOB_ID)
+if { ![info exists ::env(SLURM_JOB_ID)] } {
+        setenv APPTAINER_TMPDIR /tmp/$env(USER)
+        setenv APPTAINER_LOCALCACHEDIR /tmp/$env(USER)
+        setenv APPTAINER_CACHEDIR /tmp/$env(USER)
+} else {
+	setenv APPTAINER_TMPDIR /scratch/job_$env(SLURM_JOB_ID)
+	setenv APPTAINER_LOCALCACHEDIR /scratch/job_$env(SLURM_JOB_ID)
+	setenv APPTAINER_CACHEDIR /scratch/job_$env(SLURM_JOB_ID)
+}

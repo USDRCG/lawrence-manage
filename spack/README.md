@@ -18,10 +18,12 @@ Then copy in our customizations
 
     cp ../spack_old/etc/spack/*.yaml etc/spack/
 
-Edit the config.yaml and modules.yaml to give the new paths for install tree's and modules
+Edit the config.yaml, modules.yaml, and upstreams.yaml to give the new paths for install tree's and modules
 
     s/\/apps\/spack_old\/software/\/apps\/spack_v18\/software/g
     s/\/apps\/spack_old\/modulefiles/\/apps\/spack_v18\/modulefiles/g
+
+Upstreams.yaml is important if you want to re-use old compiled code and modules
 
 create that new spack share in apps
 
