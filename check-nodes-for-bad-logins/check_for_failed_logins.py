@@ -12,7 +12,7 @@ def main():
 
     if len(lastb.bad_logins) > 0:
         # We've got bad logins, we should email_info Bill
-        email_logins = EmailBadLogins(email_addresses_to_send_too, "root@lawrence-head.usd.edu",
+        email_logins = EmailBadLogins(email_addresses_to_send_too, "rcg@usd.edu",
                                       "Bad ssh logins on Lawrence", lastb.pretty_print_bad_logins())
         email_logins.send_emails()
 
